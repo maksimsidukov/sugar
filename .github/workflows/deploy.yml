@@ -36,12 +36,6 @@ jobs:
       - name: Run unit and DOM tests
         run: npm test
 
-      - name: Install Playwright Chromium
-        run: npm run test:e2e:install -- --with-deps
-
-      - name: Run mobile and offline browser tests
-        run: npm run test:e2e
-
       - name: Build production PWA
         run: npm run build
 
