@@ -60,7 +60,7 @@ npm run test:e2e
    ```
 
 2. В GitHub откройте **Settings → Pages** и выберите **Source: GitHub Actions**.
-3. Workflow `.github/workflows/deploy.yml` запустит unit/DOM/browser-тесты, соберёт `dist` и опубликует Pages.
+3. Workflow `.github/workflows/deploy.yml` запустит unit/DOM-тесты, соберёт `dist` и опубликует Pages. E2E временно отключены в CI, но их можно запустить локально командами из раздела «Проверки».
 4. Готовый адрес: **https://maksimsidukov.github.io/sugar/**.
 
 Если репозиторий будет переименован или подключён custom domain, обновите `base` в `vite.config.ts`, `start_url`/`scope` в manifest, ссылки в `index.html`, URL в Playwright config и этот адрес.
