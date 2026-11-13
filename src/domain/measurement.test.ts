@@ -8,8 +8,11 @@ describe('parseGlucoseInput', () => {
     ['7.8', 7.8],
     ['5', 5],
     ['12', 12],
+    ['5,67', 5.67],
+    ['0,01', 0.01],
     ['0,1', 0.1],
     ['99,9', 99.9],
+    ['99,99', 99.99],
   ])('принимает %s как %f', (raw, expected) => {
     expect(parseGlucoseInput(raw)).toBe(expected);
   });
@@ -19,7 +22,7 @@ describe('parseGlucoseInput', () => {
     ' ',
     '5,',
     ',6',
-    '5,67',
+    '5,678',
     '1,2,3',
     '1.2.3',
     'abc',
@@ -28,6 +31,7 @@ describe('parseGlucoseInput', () => {
     '-5,0',
     '0',
     '0,0',
+    '0,00',
     '100',
     '100,0',
   ])('отклоняет некорректное значение %s', (raw) => {
@@ -36,8 +40,9 @@ describe('parseGlucoseInput', () => {
 });
 
 describe('formatGlucose', () => {
-  it('использует запятую и один знак после неё', () => {
+  it('использует запятую и убирает лишний второй знак после неё', () => {
     expect(formatGlucose(5.6)).toBe('5,6');
+    expect(formatGlucose(5.67)).toBe('5,67');
     expect(formatGlucose(12)).toBe('12,0');
   });
 });

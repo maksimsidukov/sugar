@@ -52,9 +52,9 @@ describe('мобильное приложение', () => {
   it('показывает ошибку формата и блокирует повторный submit', async () => {
     await startApp(element('#app'), repository);
     element('[data-testid="dashboard-add"]').click();
-    element<HTMLInputElement>('#glucose-value').value = '6,78';
+    element<HTMLInputElement>('#glucose-value').value = '6,789';
     submitForm();
-    expect(document.body.textContent).toContain('Введите число от 0,1 до 99,9');
+    expect(document.body.textContent).toContain('Введите число от 0,01 до 99,99');
 
     element<HTMLInputElement>('#glucose-value').value = '5,8';
     submitForm();

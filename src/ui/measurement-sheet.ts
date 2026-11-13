@@ -43,10 +43,10 @@ export function openMeasurementSheet(
       </fieldset>
       <label class="value-label" for="glucose-value">Значение, ммоль/л</label>
       <div class="value-input-wrap">
-        <input id="glucose-value" name="glucose" type="text" inputmode="decimal" autocomplete="off" placeholder="5,6" maxlength="4" ${measurement ? `value="${formatGlucose(measurement.value)}"` : ''} aria-describedby="glucose-hint glucose-error" />
+        <input id="glucose-value" name="glucose" type="text" inputmode="decimal" autocomplete="off" placeholder="5,6" maxlength="5" ${measurement ? `value="${formatGlucose(measurement.value)}"` : ''} aria-describedby="glucose-hint glucose-error" />
         <span>ммоль/л</span>
       </div>
-      <p id="glucose-hint" class="field-hint">Например, 6 или 5,6 — целое или один знак после запятой</p>
+      <p id="glucose-hint" class="field-hint">Например, 6, 5,6 или 5,67 — не больше двух знаков после запятой</p>
       <p id="glucose-error" class="field-error" aria-live="polite"></p>
       <fieldset class="measurement-datetime">
         <legend>Дата и время измерения</legend>
@@ -96,7 +96,7 @@ export function openMeasurementSheet(
 
     const value = parseGlucoseInput(input.value);
     if (value === null) {
-      error.textContent = 'Введите число от 0,1 до 99,9 — целое или с одним знаком после запятой';
+      error.textContent = 'Введите число от 0,01 до 99,99 — не больше двух знаков после запятой';
       input.setAttribute('aria-invalid', 'true');
       input.focus();
       return;

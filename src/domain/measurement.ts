@@ -17,14 +17,16 @@ export type MeasurementInput = Omit<Measurement, 'id'>;
 
 export function parseGlucoseInput(raw: string): number | null {
   const normalized = raw.trim();
-  if (!/^\d{1,2}([,.]\d)?$/.test(normalized)) return null;
+  if (!/^\d{1,2}([,.]\d{1,2})?$/.test(normalized)) return null;
 
   const value = Number(normalized.replace(',', '.'));
-  return Number.isFinite(value) && value >= 0.1 && value <= 99.9 ? value : null;
+  return Number.isFinite(value) && value >= 0.01 && value <= 99.99 ? value : null;
 }
 
 export function formatGlucose(value: number): string {
-  return value.toFixed(1).replace('.', ',');
+  const fixed = value.toFixed(2);
+  const trimmed = fixed.endsWith('0') ? fixed.slice(0, -1) : fixed;
+  return trimmed.replace('.', ',');
 }
 
 const DATE_INPUT_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
