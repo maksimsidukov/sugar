@@ -25,6 +25,16 @@ export function addMeasurementToState(state: AppState, measurement: Measurement)
   };
 }
 
+export function updateMeasurementInState(state: AppState, measurement: Measurement): AppState {
+  return {
+    ...state,
+    measurements: sortMeasurements(
+      state.measurements.map((item) => (item.id === measurement.id ? measurement : item)),
+      'desc',
+    ),
+  };
+}
+
 export function removeMeasurementFromState(state: AppState, id: string): AppState {
   return {
     ...state,

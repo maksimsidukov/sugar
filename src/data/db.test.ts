@@ -59,6 +59,22 @@ describe('IndexedDB measurement repository', () => {
     await expect(repo.deleteMeasurement('missing')).resolves.toBeUndefined();
   });
 
+  it('обновляет существующую запись, сохраняя её id', async () => {
+    const repo = repository();
+    const saved = await repo.saveMeasurement(input(100, 5.6));
+
+    const updated = await repo.updateMeasurement(saved.id, { type: 'after-1h', value: 7.2, measuredAt: 200 });
+
+    expect(updated).toEqual({ id: saved.id, type: 'after-1h', value: 7.2, measuredAt: 200 });
+    expect(await repo.listMeasurements()).toEqual([updated]);
+  });
+
+  it('не создаёт новую запись при обновлении отсутствующего id', async () => {
+    const repo = repository();
+    await expect(repo.updateMeasurement('missing', input(100))).rejects.toThrow('Запись не найдена');
+    expect(await repo.listMeasurements()).toEqual([]);
+  });
+
   it('сообщает понятную ошибку, если IndexedDB недоступна', async () => {
     vi.stubGlobal('indexedDB', undefined);
     const repo = repository();

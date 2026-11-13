@@ -1,4 +1,5 @@
-import { addMeasurementToState, createDefaultState, removeMeasurementFromState, type AppState } from './app-state';
+import { addMeasurementToState, createDefaultState, removeMeasurementFromState, updateMeasurementInState, type AppState } from './app-state';
+import type { Measurement } from './domain/measurement';
 import { defaultRepository, type MeasurementRepository } from './data/db';
 import { downloadBlob } from './export/download';
 import { exportMeasurements } from './export/xlsx';
@@ -39,6 +40,16 @@ export async function startApp(
       render();
       showToast('Измерение сохранено');
     });
+  }
+
+  function openEditSheet(measurement: Measurement): void {
+    openMeasurementSheet(async (input) => {
+      if (!state) return;
+      const updated = await repository.updateMeasurement(measurement.id, input);
+      state = updateMeasurementInState(state, updated);
+      render();
+      showToast('Изменения сохранены');
+    }, measurement);
   }
 
   root.addEventListener('click', (event) => {
@@ -93,6 +104,13 @@ export async function startApp(
     if (tab === 'dashboard' || tab === 'history') {
       state = { ...state, activeTab: tab };
       render();
+      return;
+    }
+
+    const editId = button.dataset.editId;
+    const editable = editId ? state.measurements.find((item) => item.id === editId) : null;
+    if (editable) {
+      openEditSheet(editable);
       return;
     }
 

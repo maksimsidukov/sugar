@@ -5,6 +5,7 @@ const paths = {
   plus: '<path d="M12 5v14M5 12h14"/>',
   shield: '<path d="M12 3 5 6v5c0 4.6 2.8 7.8 7 10 4.2-2.2 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
   trash: '<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>',
+  pencil: '<path d="m14 6 4 4L8 20l-5 1 1-5Z"/><path d="m12 8 4 4"/>',
   close: '<path d="m6 6 12 12M18 6 6 18"/>',
   share: '<path d="M12 15V3m0 0L8 7m4-4 4 4M5 12v8h14v-8"/>',
   chevron: '<path d="m9 5 7 7-7 7"/>',

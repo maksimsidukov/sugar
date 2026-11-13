@@ -810,14 +810,62 @@ button:disabled {
   color: #a6413f;
 }
 
-.measurement-time {
+.measurement-datetime {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.measurement-datetime legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.datetime-field {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 16px 0;
-  color: var(--ink-secondary);
-  font-size: 12px;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #f7f9f6;
+}
+
+.datetime-field:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(23, 107, 91, 0.09);
+}
+
+.datetime-field > span {
+  color: var(--ink-muted);
+  font-size: 11px;
+}
+
+.datetime-field input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+  background: transparent;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.datetime-field input[aria-invalid="true"] {
+  color: #a6413f;
 }
 
 .measurement-form > .primary-button {

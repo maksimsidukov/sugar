@@ -12,6 +12,7 @@ interface SugarDatabase extends DBSchema {
 export interface MeasurementRepository {
   listMeasurements(): Promise<Measurement[]>;
   saveMeasurement(input: MeasurementInput): Promise<Measurement>;
+  updateMeasurement(id: string, input: MeasurementInput): Promise<Measurement>;
   deleteMeasurement(id: string): Promise<void>;
   close(): void;
 }
@@ -44,6 +45,15 @@ export function createMeasurementRepository(databaseName = 'sugar-diary'): Measu
       const measurement: Measurement = { ...input, id: crypto.randomUUID() };
       const database = await getDatabase();
       await database.add('measurements', measurement);
+      return measurement;
+    },
+
+    async updateMeasurement(id, input) {
+      const database = await getDatabase();
+      const existing = await database.get('measurements', id);
+      if (!existing) throw new Error('Запись не найдена');
+      const measurement: Measurement = { ...input, id };
+      await database.put('measurements', measurement);
       return measurement;
     },
 

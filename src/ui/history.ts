@@ -115,6 +115,7 @@ function renderDay(day: string, items: Measurement[]): string {
               <span>${formatTime(item.measuredAt)}</span>
             </div>
             <div class="measurement-row__value">${formatGlucose(item.value)}<small>ммоль/л</small></div>
+            <button class="icon-button icon-button--muted" type="button" data-edit-id="${item.id}" aria-label="Изменить измерение ${formatGlucose(item.value)}">${icon('pencil', 19)}</button>
             <button class="icon-button icon-button--muted" type="button" data-delete-id="${item.id}" aria-label="Удалить измерение ${formatGlucose(item.value)}">${icon('trash', 19)}</button>
           </article>
         `).join('')}

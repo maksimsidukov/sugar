@@ -52,9 +52,9 @@ describe('мобильное приложение', () => {
   it('показывает ошибку формата и блокирует повторный submit', async () => {
     await startApp(element('#app'), repository);
     element('[data-testid="dashboard-add"]').click();
-    element<HTMLInputElement>('#glucose-value').value = '6';
+    element<HTMLInputElement>('#glucose-value').value = '6,78';
     submitForm();
-    expect(document.body.textContent).toContain('Введите число с одним знаком после запятой');
+    expect(document.body.textContent).toContain('Введите число от 0,1 до 99,9');
 
     element<HTMLInputElement>('#glucose-value').value = '5,8';
     submitForm();
@@ -77,6 +77,44 @@ describe('мобильное приложение', () => {
     element('[data-delete-id]').click();
     element('[data-confirm-delete]').click();
     await vi.waitFor(() => expect(document.body.textContent).toContain('Пока нет измерений'));
+  });
+
+  it('редактирует запись из истории в той же шторке', async () => {
+    const saved = await repository.saveMeasurement({ type: 'fasting', value: 5.6, measuredAt: new Date(2026, 10, 10, 8, 30).getTime() });
+    await startApp(element('#app'), repository);
+
+    element('button[data-tab="history"]').click();
+    element(`[data-edit-id="${saved.id}"]`).click();
+
+    const dialog = element<HTMLDialogElement>('dialog[aria-label="Редактирование измерения"]');
+    expect(dialog.hasAttribute('open')).toBe(true);
+    expect(element<HTMLInputElement>('#glucose-value').value).toBe('5,6');
+    expect(element<HTMLInputElement>('input[name="measurement-type"]:checked').value).toBe('fasting');
+    expect(element<HTMLInputElement>('#measurement-date').value).toBe('2026-11-10');
+    expect(element<HTMLInputElement>('#measurement-time').value).toBe('08:30');
+
+    element<HTMLInputElement>('#glucose-value').value = '6,1';
+    element<HTMLInputElement>('input[name="measurement-type"][value="after-2h"]').checked = true;
+    element<HTMLInputElement>('#measurement-time').value = '21:15';
+    element<HTMLFormElement>('form[aria-label="Форма редактирования измерения"]').dispatchEvent(
+      new Event('submit', { bubbles: true, cancelable: true }),
+    );
+
+    await vi.waitFor(() => {
+      expect(document.querySelector('dialog[aria-label="Редактирование измерения"]')).toBeNull();
+    });
+    expect(element('[role="status"]').textContent).toContain('Изменения сохранены');
+
+    const rows = document.querySelectorAll('[data-history-item]');
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.textContent).toContain('2 ч после еды');
+    expect(rows[0]!.textContent).toContain('6,1');
+    expect(rows[0]!.textContent).toContain('21:15');
+
+    const stored = await repository.listMeasurements();
+    expect(stored).toHaveLength(1);
+    expect(stored[0]).toMatchObject({ id: saved.id, type: 'after-2h', value: 6.1 });
+    expect(stored[0]!.measuredAt).toBe(new Date(2026, 10, 10, 21, 15).getTime());
   });
 
   it('показывает историю, таблицу и применяет общий фильтр ко всем данным', async () => {

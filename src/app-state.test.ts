@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Measurement } from './domain/measurement';
-import { addMeasurementToState, createDefaultState, removeMeasurementFromState } from './app-state';
+import { addMeasurementToState, createDefaultState, removeMeasurementFromState, updateMeasurementInState } from './app-state';
 
 function item(id: string, measuredAt: number): Measurement {
   return { id, type: 'fasting', value: 5.5, measuredAt };
@@ -28,5 +28,13 @@ describe('AppState', () => {
     const state = createDefaultState([item('one', 100), item('two', 200)]);
     const next = removeMeasurementFromState(state, 'one');
     expect(next.measurements.map(({ id }) => id)).toEqual(['two']);
+  });
+
+  it('обновляет запись и пересортировывает по новой дате', () => {
+    const state = createDefaultState([item('one', 100), item('two', 200)]);
+    const next = updateMeasurementInState(state, { ...item('one', 300), value: 8.1 });
+    expect(next.measurements.map(({ id }) => id)).toEqual(['one', 'two']);
+    expect(next.measurements[0]?.value).toBe(8.1);
+    expect(state.measurements.map(({ id }) => id)).toEqual(['two', 'one']);
   });
 });
